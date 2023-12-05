@@ -17,10 +17,8 @@ def get_real_time_data(ticker):
     return data 
 
 
-pprint.pprint(get_real_time_data("aapl"))
+# pprint.pprint(get_real_time_data("aapl"))
 
-def sp500_tickers():
-    return 
 
 def top_10_gainers():
     """
