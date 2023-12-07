@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Interests</title>
+</head>
+<body>
+    <h1>User Interests</h1>
+    <ul>
+        {% for stock in user_interests %}
+            <li>{{ stock }}
+                <form method="post" action="{{ url_for('remove_interest') }}" style="display:inline;">
+                    <input type="hidden" name="ticker" value="{{ stock }}">
+                    <button type="submit">Remove</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

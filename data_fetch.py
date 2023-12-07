@@ -17,8 +17,6 @@ def get_real_time_data(ticker):
     return data 
 
 
-pprint.pprint(get_real_time_data("aapl"))
-
 
 def top_10_gainers():
     """
@@ -28,5 +26,4 @@ def top_10_gainers():
     return gainers
 
     
-pprint.pprint(top_10_gainers())
 
