@@ -2,37 +2,58 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from helper import *
 
 app = Flask(__name__)
+app.secret_key = '0000'  
 
 @app.route('/')
-def index():
-    top_gainers = top_10_gainers()
-    return render_template('index.html', top_gainers=top_gainers)
+def home():
+    return render_template('home.html')
+
+@app.route('/top_gainers')
+def top_gainers():
+    gainers_data = top_10_gainers()
+    return render_template('top_gainers.html', top_gainers=gainers_data)
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
         ticker = request.form['ticker']
-        stock_data = search_stock(ticker)
-        return render_template('result.html', stock_data=stock_data)
+        stock_data = get_stock_info(ticker)
+        return render_template('result.html', stock_data=stock_data, ticker=ticker)
+    return render_template('search.html')
 
-    return render_template('404.html'), 404
 
-@app.route('/user')
-def user():
-    user_interests = session.get('interests', [])
-    return render_template('user.html', user_interests=user_interests)
+@app.route('/portfolio')
+def portfolio():
+    portfolio_stocks = session.get('portfolio', [])
+    portfolio_data = [get_stock_info(stock) for stock in portfolio_stocks]
+    return render_template('portfolio.html', portfolio_data=portfolio_data)
 
-@app.route('/add_interest', methods=['POST'])
-def add_interest():
+
+@app.route('/add_to_portfolio', methods=['POST'])
+def add_to_portfolio():
     ticker = request.form['ticker']
-    user_interests = session.get('interests', [])
+    if ticker:
+        portfolio = session.get('portfolio', [])
+        if ticker not in portfolio:
+            portfolio.append(ticker)
+            session['portfolio'] = portfolio
 
-    # Check if the stock is not already in the interest list
-    if ticker not in user_interests:
-        user_interests.append(ticker)
-        session['interests'] = user_interests
+    return redirect(url_for('portfolio'))
 
-    return redirect(url_for('search'))
+
+@app.route('/remove_from_portfolio/<ticker>', methods=['POST'])
+def remove_from_portfolio(ticker):
+    portfolio = session.get('portfolio', [])
+
+    # Remove the ticker if it's in the portfolio
+    if ticker in portfolio:
+        portfolio.remove(ticker)
+        session['portfolio'] = portfolio
+        session.modified = True
+
+    return redirect(url_for('portfolio'))
+
 
 
 if __name__ == '__main__':

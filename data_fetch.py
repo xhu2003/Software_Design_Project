@@ -16,7 +16,7 @@ def get_real_time_data(ticker):
     
     return data 
 
-
+pprint.pprint(get_real_time_data('msft'))
 
 def top_10_gainers():
     """
@@ -24,6 +24,10 @@ def top_10_gainers():
     """
     gainers = si.get_day_gainers().head(10)
     return gainers
+
+pprint.pprint(top_10_gainers())
+
+
 
     
 
